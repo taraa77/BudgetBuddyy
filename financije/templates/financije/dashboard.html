@@ -20,7 +20,6 @@
       --soft:#eef2f7;
     }
 
-    
     header {
       position:fixed; top:0; left:0; width:100%; z-index:1000;
       background:rgba(255,255,255,0.95);
@@ -36,7 +35,6 @@
     header nav a {font-weight:500; color:var(--primary); transition:0.3s;}
     header nav a:hover {color:var(--secondary);}
 
-    
     .page-intro {
       margin-top:6rem;
       text-align:center;
@@ -45,7 +43,6 @@
     .page-intro h2 {font-size:2rem; color:var(--primary); margin-bottom:0.5rem;}
     .page-intro p {color:var(--gray); font-size:1.1rem;}
 
-    
     .container {
       padding:2rem 8%;
       display:grid;
@@ -53,7 +50,6 @@
       gap:1.5rem;
     }
 
-    
     .card {
       background:var(--light);
       padding:1.5rem;
@@ -84,10 +80,8 @@
     }
     .card p {margin:0.3rem 0; font-size:0.95rem;}
 
-    
     .history-card {text-align:center; background:#fefefe;}
 
-    
     .graphs {
       padding:3rem 8%;
     }
@@ -107,11 +101,27 @@
       padding:1.5rem;
       border-radius:15px;
       box-shadow:0 6px 20px rgba(0,0,0,0.06);
+      text-align:center;
+    }
+
+    /* Grafovi */
+    #expensesChart {
+      width: 500px !important;
+      height: 500px !important;
+      margin: 0 auto;
+      display: block;
+    }
+
+    #incomeExpenseChart {
+      width: 100% !important;
+      max-width: 600px;
+      height: 400px !important;
+      margin: 0 auto;
+      display: block;
     }
   </style>
 </head>
 <body>
-
 
 <header>
   <a href="{% url 'home' %}" class="logo"><i class='bx bx-wallet'></i> BudgetBuddy</a>
@@ -121,15 +131,12 @@
   </nav>
 </header>
 
-
 <section class="page-intro">
   <h2>BudgetBuddy</h2>
   <p>Pregledaj prihode, troškove i postavi svoje ciljeve za financijsku slobodu.</p>
 </section>
 
-
 <div class="container">
-  
   <div class="card">
     <h3>Odaberi mjesec i godinu</h3>
     <form method="get">
@@ -141,7 +148,6 @@
     </form>
   </div>
 
-  
   <div class="card">
     <h3>Moj mjesečni cilj</h3>
     <form method="POST">
@@ -157,7 +163,6 @@
     <p><b>Trenutni cilj:</b> {{ monthly_data.goal }} EUR</p>
   </div>
 
-  
   <div class="card">
     <h3>Unesi prihode</h3>
     <form method="POST">
@@ -173,7 +178,6 @@
     <p><b>Ukupni prihodi do sada:</b> {{ monthly_data.income }} EUR</p>
   </div>
 
-  
   <div class="card">
     <h3>Dodaj trošak</h3>
     <form method="POST">
@@ -203,7 +207,6 @@
     </form>
   </div>
 
-  
   <div class="card">
     <h3>Trenutno stanje</h3>
     <p><b>Ukupni prihodi:</b> {{ monthly_data.income }} EUR</p>
@@ -211,14 +214,12 @@
     <p><b>Preostalo sredstava:</b> {{ remaining }} EUR</p>
   </div>
 
-  
   <div class="card history-card">
     <h3>Povijest financija</h3>
     <p>Pregledaj i usporedi mjesečne rezultate</p>
     <a href="{% url 'history' %}"><button class="btn">Pogledaj povijest</button></a>
   </div>
 </div>
-
 
 <section class="graphs">
   <h2>Financijski grafovi</h2>
@@ -235,13 +236,14 @@
 </section>
 
 <script>
-    document.getElementById('kategorija').addEventListener('change', function() {
+  document.getElementById('kategorija').addEventListener('change', function() {
     if (this.value === 'custom') {
       document.getElementById('custom-category').style.display = 'block';
     } else {
       document.getElementById('custom-category').style.display = 'none';
     }
   });
+  
   
   const expensesChart = new Chart(document.getElementById('expensesChart'), {
     type: 'pie',
@@ -251,27 +253,36 @@
         data: JSON.parse('{{ amounts|escapejs }}'),
         backgroundColor: ['#f39c12','#e74c3c','#3498db','#9b59b6','#2ecc71','#1abc9c','#34495e']
       }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
     }
   });
 
   
-  const incomeExpenseChart = new Chart(document.getElementById('incomeExpenseChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Prihodi', 'Troškovi'],
-      datasets: [{
-        data: [
-          Number("{{ monthly_data.income|default:0 }}"),
-          Number("{{ total_expenses|default:0 }}")
-        ],
-        backgroundColor: ['#27ae60','#e74c3c']
-      }]
-    },
-    options: {
-      plugins: {legend: {display: false}},
-      scales: {y: {beginAtZero:true}}
+  const income = JSON.parse('{{ income|default:0|escapejs }}');
+  const expenses = JSON.parse('{{ total_expenses|default:0|escapejs }}');
+
+  const incomeExpenseChart = new Chart(
+    document.getElementById('incomeExpenseChart'),
+    {
+      type: 'bar',
+      data: {
+        labels: ['Prihodi', 'Troškovi'],
+        datasets: [{
+          data: [income, expenses],
+          backgroundColor: ['#27ae60','#e74c3c']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
     }
-  });
+  );
 </script>
 </body>
 </html>

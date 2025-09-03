@@ -96,8 +96,9 @@ def dashboard(request):
     context = {
         "monthly_data": monthly_data,
         "expenses": expenses,
-        "total_expenses": total_expenses,
-        "remaining": remaining,
+        "income": float(monthly_data.income),
+        "total_expenses": float(total_expenses),
+        "remaining": float(remaining),
         "selected_month": selected_month,
         "categories": json.dumps(categories),
         "amounts": json.dumps(amounts),
