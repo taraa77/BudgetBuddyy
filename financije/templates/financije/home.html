@@ -1,0 +1,260 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BudgetBuddy</title>
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
+    body {background:#fafcff; color:#2c3e50; line-height:1.6;}
+    a {text-decoration:none; color:inherit;}
+    img {max-width:100%; display:block; border-radius:12px;}
+
+    :root {
+      --primary:#2c3e50;
+      --secondary:#f39c12;
+      --accent:#6ab04c;
+      --light:#ffffff;
+      --gray:#7f8c8d;
+    }
+
+    
+    header {
+      position:fixed; top:0; left:0; width:100%; z-index:1000;
+      background:rgba(255,255,255,0.95);
+      padding:1rem 8%; display:flex; justify-content:space-between; align-items:center;
+      box-shadow:0 4px 20px rgba(0,0,0,0.05);
+      backdrop-filter: blur(10px);
+    }
+    header .logo {
+      font-size:1.8rem; font-weight:700; color:var(--primary);
+      display:flex; align-items:center; gap:0.6rem;
+    }
+    header .navbar {list-style:none; display:flex; gap:2rem;}
+    header .navbar li a {
+      font-weight:500; color:var(--primary); transition:0.3s;
+    }
+    header .navbar li a:hover {color:var(--secondary);}
+
+    
+    .hero {
+      height:100vh; display:flex; align-items:center; justify-content:center;
+      text-align:center; position:relative; overflow:hidden;
+      background:url("{% static 'images/slika.jpg' %}") no-repeat center center/cover;
+    }
+    .hero::after {
+      content:""; position:absolute; top:0; left:0; right:0; bottom:0;
+      background:rgba(44,62,80,0.55);
+    }
+    .hero-content {
+      position:relative; color:#fff; z-index:1; max-width:800px; padding:0 1rem;
+    }
+    .hero h1 {font-size:3rem; font-weight:700; margin-bottom:1rem;}
+    .hero p {font-size:1.2rem; margin-bottom:2rem; color:#ecf0f1;}
+    .btn {
+      background:var(--secondary); color:var(--light); padding:1rem 2.5rem;
+      border:none; border-radius:50px; font-weight:600; cursor:pointer; transition:0.3s;
+      box-shadow:0 6px 20px rgba(0,0,0,0.2);
+    }
+    .btn:hover {background:#d68910; transform:translateY(-4px);}
+
+    
+    section {padding:6rem 8%;}
+    .heading {text-align:center; margin-bottom:3rem;}
+    .heading h1 {font-size:2.4rem; color:var(--primary); margin-bottom:1rem;}
+    .heading p {color:var(--gray); max-width:650px; margin:auto;}
+
+    
+    .about-container {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:2rem;
+    }
+    .box {
+      background:var(--light); border-radius:15px; overflow:hidden;
+      box-shadow:0 8px 25px rgba(0,0,0,0.08); transition:0.3s;
+    }
+    .box:hover {transform:translateY(-8px);}
+    .about-img img {width:100%; height:220px; object-fit:cover;}
+    .about-text {padding:1.5rem;}
+    .about-text h2 {color:var(--secondary); margin-bottom:0.8rem; font-size:1.5rem;}
+    .about-text p {color:var(--gray);}
+
+    
+    .znacajke-container {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:2rem;
+    }
+    .feature-card {
+      background:var(--light); padding:3rem 2rem; border-radius:15px;
+      text-align:center; box-shadow:0 8px 25px rgba(0,0,0,0.08);
+      transition:0.3s;
+    }
+    .feature-card:hover {transform:translateY(-6px);}
+    .feature-card i {
+      font-size:2.8rem; color:var(--accent); margin-bottom:1rem; display:block;
+    }
+    .feature-card h3 {color:var(--primary); margin-bottom:0.8rem;}
+    .feature-card p {color:var(--gray);}
+
+    
+    .cta {
+      background: var(--soft-bg, #f9fbfd);
+      padding: 5rem 2rem;
+    }
+    .cta-content {
+      background: var(--light);
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      align-items: center;
+      gap: 2rem;
+      padding: 3rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .cta-text h2 {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .cta-text p {
+      font-size: 1.1rem;
+      color: var(--gray);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .cta-text .highlight {
+      color: var(--secondary);
+      font-weight: 600;
+    }
+    .cta-img img {
+      width: 100%;
+      border-radius: 15px;
+      object-fit: cover;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    
+    .footer {
+      background:var(--primary); color:var(--light); padding:3rem 8%; text-align:center;
+    }
+    .footer h2 {margin-bottom:0.8rem; color:var(--secondary);}
+    .social a {
+      display:inline-block; margin:0 0.5rem; font-size:1.7rem;
+      color:var(--light); transition:0.3s;
+    }
+    .social a:hover {color:var(--secondary);}
+    .copyright {
+      background:#1a252f; color:#fff; padding:1rem; text-align:center; font-size:0.9rem;
+    }
+  </style>
+</head>
+<body>
+  
+  <header>
+    <a href="#" class="logo"><i class='bx bx-wallet'></i> BudgetBuddy</a>
+    <ul class="navbar">
+      <li><a href="#pocetna" class="active">Početna</a></li>
+      <li><a href="#about">O aplikaciji</a></li>
+      <li><a href="#znacajke">Značajke</a></li>
+    </ul>
+  </header>
+
+  
+  <section class="hero" id="pocetna">
+    <div class="hero-content">
+      <h1>Financijska sloboda počinje ovdje</h1>
+      <p>Planiraj, prati i ostvaruj svoje ciljeve uz sigurnog partnera za tvoje financije.</p>
+      <a href="{% url 'dashboard' %}"><button class="btn">Započni sada</button></a>
+    </div>
+  </section>
+
+  
+  <section class="about" id="about">
+    <div class="heading">
+      <h1>Kako ti pomažemo?</h1>
+      <p>Prati prihode, troškove i ostvaruj ciljeve štednje kroz jasne grafove i analize.</p>
+    </div>
+    <div class="about-container">
+      <div class="box">
+        <div class="about-img"><img src="{% static 'images/slika1.jpg' %}" alt="Budget planning"></div>
+        <div class="about-text">
+          <h2>Planiranje</h2>
+          <p>Unesi prihode i troškove te odmah vidi svoje financijsko stanje.</p>
+        </div>
+      </div>
+      <div class="box">
+        <div class="about-img"><img src="{% static 'images/slika2.jpg' %}" alt="Expense analysis"></div>
+        <div class="about-text">
+          <h2>Analiza</h2>
+          <p>Pametni grafovi i izvještaji pomažu ti otkriti gdje odlazi tvoj novac.</p>
+        </div>
+      </div>
+      <div class="box">
+        <div class="about-img"><img src="{% static 'images/slika3.jpg' %}" alt="Savings goals"></div>
+        <div class="about-text">
+          <h2>Ciljevi</h2>
+          <p>Postavi ciljeve štednje i prati koliko odstupaš ili ih premašuješ.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="znacajke" id="znacajke">
+    <div class="heading">
+      <h1>Prednosti BudgetBuddy-a</h1>
+      <p>Sve što ti treba za potpunu kontrolu nad financijama.</p>
+    </div>
+    <div class="znacajke-container">
+      <div class="feature-card">
+        <i class='bx bx-bar-chart-alt-2'></i>
+        <h3>Statistika</h3>
+        <p>Interaktivni dijagrami pokazuju ti potrošnju po kategorijama.</p>
+      </div>
+      <div class="feature-card">
+        <i class='bx bx-lock-alt'></i>
+        <h3>Sigurnost</h3>
+        <p>Tvoji podaci su pohranjeni sigurno i dostupni samo tebi.</p>
+      </div>
+      <div class="feature-card">
+        <i class='bx bx-mobile'></i>
+        <h3>Dostupnost</h3>
+        <p>Pristupi aplikaciji bilo gdje, na mobitelu, tabletu ili računalu.</p>
+      </div>
+      <div class="feature-card">
+        <i class='bx bx-bullseye'></i>
+        <h3>Praćenje ciljeva</h3>
+        <p>Postavi i prati ciljeve te dobivaj savjete kako ih ostvariti.</p>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="cta">
+    <div class="cta-content">
+      <div class="cta-text">
+        <h2>Spreman za pametnije financije?</h2>
+        <p>Pridruži se <span class="highlight">BudgetBuddy</span> zajednici i preuzmi potpunu kontrolu nad svojim novcem</p>
+        <a href="{% url 'dashboard' %}">
+          <button class="btn">Krenimo</button>
+        </a>
+      </div>
+      <div class="cta-img">
+        <img src="{% static 'images/money.jpg' %}" alt="Smart finance">
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="footer">
+    <h2>BudgetBuddy</h2>
+    <p>Tvoj osobni financijski partner.</p>
+  </section>
+  <div class="copyright">© 2025 BudgetBuddy, Sva prava pridržana</div>
+</body>
+</html>

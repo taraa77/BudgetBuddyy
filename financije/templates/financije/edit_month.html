@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uredi mjesec | BudgetBuddy</title>
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
+    body {background:#f7f9fc; color:#2c3e50;}
+    a {text-decoration:none; color:inherit;}
+
+    :root {
+      --primary:#2c3e50;
+      --secondary:#f39c12;
+      --light:#ffffff;
+      --gray:#7f8c8d;
+    }
+
+    
+    header {
+      position:fixed; top:0; left:0; width:100%; z-index:1000;
+      background:rgba(255,255,255,0.95);
+      padding:1rem 8%; display:flex; justify-content:space-between; align-items:center;
+      box-shadow:0 4px 20px rgba(0,0,0,0.05);
+      backdrop-filter: blur(10px);
+    }
+    header h1 {
+      font-size:1.6rem; font-weight:700; color:var(--primary);
+      display:flex; align-items:center; gap:0.5rem;
+    }
+    header nav {display:flex; gap:1.5rem;}
+    header nav a {font-weight:500; color:var(--primary); transition:0.3s;}
+    header nav a:hover {color:var(--secondary);}
+
+    
+    .container {
+      margin-top:7rem;
+      padding:2rem;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    
+    .card {
+      background:var(--light);
+      padding:2rem;
+      border-radius:15px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.06);
+      max-width:500px;
+      width:100%;
+    }
+    .card h2 {
+      margin-bottom:1.5rem;
+      color:var(--primary);
+      font-size:1.4rem;
+      border-left:4px solid var(--secondary);
+      padding-left:0.5rem;
+    }
+    label {
+      display:block;
+      margin:1rem 0 0.5rem;
+      font-weight:500;
+      color:var(--primary);
+    }
+    input {
+      width:100%;
+      padding:0.7rem;
+      border:1px solid #ddd;
+      border-radius:8px;
+      background:#fafbfc;
+      font-size:1rem;
+    }
+    button {
+      margin-top:1.5rem;
+      padding:0.8rem 1.6rem;
+      border:none;
+      border-radius:25px;
+      cursor:pointer;
+      background:var(--secondary);
+      color:#fff;
+      font-weight:500;
+      transition:0.3s;
+    }
+    button:hover {
+      background:#d68910;
+      transform:translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  
+  <header>
+    <h1><i class='bx bx-edit'></i>Uredi mjesec</h1>
+    <nav>
+      <a href="{% url 'history' %}">⬅ Povijest</a>
+      <a href="{% url 'dashboard' %}">BudgetBuddy</a>
+      <a href="{% url 'logout' %}">Odjava</a>
+    </nav>
+  </header>
+
+  
+  <div class="container">
+    <div class="card">
+      <h2>Uredi mjesec: {{ month_data.month }}</h2>
+      <form method="POST">
+        {% csrf_token %}
+        <label for="income">Prihodi (EUR)</label>
+        <input type="number" step="0.01" name="income" value="{{ month_data.income }}">
+
+        <label for="goal">Cilj (EUR)</label>
+        <input type="number" step="0.01" name="goal" value="{{ month_data.goal }}">
+
+        <button type="submit">Spremi</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

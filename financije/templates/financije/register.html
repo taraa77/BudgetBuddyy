@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registracija | BudgetBuddy</title>
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e272e, #2f3640);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .register-box {
+      background: #fff;
+      padding: 3rem 2.5rem;
+      border-radius: 18px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 0.7s ease-in-out;
+    }
+
+    .register-box h1 {
+      margin-bottom: 2rem;
+      font-size: 1.9rem;
+      color: #0a3d62;
+      font-weight: 700;
+    }
+
+    .register-box p.error {
+      color: #e74c3c;
+      margin-bottom: 1rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 0.9rem 1rem 0.9rem 2.8rem;
+      border: 1.5px solid #dcdde1;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      background: #f9f9f9;
+    }
+
+    .input-group input:focus {
+      border-color: #f39c12;
+      background: #fff;
+      box-shadow: 0 0 6px rgba(243, 156, 18, 0.3);
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #7f8c8d;
+      font-size: 1.2rem;
+    }
+
+    .btn {
+      background: #f39c12;
+      color: #fff;
+      border: none;
+      padding: 1rem;
+      width: 100%;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .btn:hover {
+      background: #d68910;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+
+    .footer-text {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #636e72;
+    }
+
+    .footer-text a {
+      color: #0a3d62;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-box">
+    <h1>Registracija</h1>
+
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="input-group">
+        <i class='bx bx-user'></i>
+        <input type="text" name="username" placeholder="Korisničko ime" required>
+      </div>
+      <div class="input-group">
+        <i class='bx bx-lock-alt'></i>
+        <input type="password" name="password1" placeholder="Lozinka" required>
+      </div>
+      <div class="input-group">
+        <i class='bx bx-lock'></i>
+        <input type="password" name="password2" placeholder="Ponovi lozinku" required>
+      </div>
+      <button type="submit" class="btn">Registriraj se</button>
+    </form>
+
+    <div class="footer-text">
+      <p>Već imaš račun? <a href="{% url 'login' %}">Prijavi se</a></p>
+    </div>
+  </div>
+</body>
+</html>
