@@ -7,7 +7,11 @@ from .models import MonthlyData, Expense
 from datetime import datetime
 from decimal import Decimal
 import json
-
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from django.shortcuts import get_object_or_404
+from collections import defaultdict
 
 def user_login(request):
     if request.method == "POST":
@@ -32,7 +36,7 @@ def home(request):
     return render(request, 'financije/home.html')
 
 
-from collections import defaultdict
+
 
 @login_required
 def dashboard(request):
@@ -167,34 +171,6 @@ def delete_month(request, pk):
         return redirect("history")
     return render(request, "financije/delete_month.html", {"month_data": month_data})
 
-import csv
-from django.http import HttpResponse
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
-from django.shortcuts import get_object_or_404
-
-
-@login_required
-def export_csv(request, pk):
-    month_data = get_object_or_404(MonthlyData, pk=pk, user=request.user)
-    expenses = month_data.expenses.all()
-
-    
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = f'attachment; filename="{month_data.month}_report.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(["Mjesec", "Prihod", "Cilj", "Ukupni troškovi", "Status"])
-    status = "Ostvaren" if (month_data.income - sum(e.amount for e in expenses)) >= month_data.goal else "Nije ostvaren"
-    writer.writerow([month_data.month, month_data.income, month_data.goal, sum(e.amount for e in expenses), status])
-
-    writer.writerow([])
-    writer.writerow(["Popis troškova"])
-    writer.writerow(["Kategorija", "Iznos (EUR)"])
-    for e in expenses:
-        writer.writerow([e.category, e.amount])
-
-    return response
 
 
 @login_required

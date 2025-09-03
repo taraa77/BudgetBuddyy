@@ -10,6 +10,5 @@ urlpatterns = [
     path("history/edit/<int:pk>/", views.edit_month, name="edit_month"),
     path("history/delete/<int:pk>/", views.delete_month, name="delete_month"),
     path("register/", views.register, name="register"),
-     path("export_csv/<int:pk>/", views.export_csv, name="export_csv"),
     path("export_pdf/<int:pk>/", views.export_pdf, name="export_pdf"),
 ]
