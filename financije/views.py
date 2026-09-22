@@ -7,6 +7,8 @@ from .models import MonthlyData, Expense
 from datetime import datetime
 from decimal import Decimal
 import json
+import csv
+from django.views.decorators.http import require_GET
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -223,4 +225,87 @@ def export_pdf(request, pk):
     p.save()
 
     return response
+def _csv_text(value):
+    text = str(value)
+    if text.lstrip().startswith(("=", "+", "-", "@")):
+        return "'" + text
+    if text.startswith(("\t", "\r", "\n")):
+        return "'" + text
+    return text
 
+
+@login_required(login_url="login")
+@require_GET
+def export_csv(request, pk):
+    month_data = get_object_or_404(
+        MonthlyData,
+        pk=pk,
+        user=request.user,
+    )
+
+    expenses = list(month_data.expenses.order_by("pk"))
+
+    total_expenses = sum(
+        (expense.amount for expense in expenses),
+        Decimal("0.00"),
+    )
+    remaining = month_data.income - total_expenses
+    goal_reached = remaining >= month_data.goal
+
+    response = HttpResponse(
+        content_type="text/csv; charset=utf-8"
+    )
+    response["Content-Disposition"] = (
+        f'attachment; filename="budgetbuddy_mjesec_{pk}.csv"'
+    )
+    response["Cache-Control"] = "private, no-store"
+
+    response.write("\ufeff")
+
+    writer = csv.writer(response, delimiter=";")
+
+    def money(value):
+        return f"{value:.2f}".replace(".", ",")
+
+    month = _csv_text(month_data.month)
+
+    writer.writerow([
+        "Mjesec",
+        "Vrsta zapisa",
+        "Opis",
+        "Iznos (EUR)",
+    ])
+
+    writer.writerow([
+        month, "Prihod", "Mjesečni prihod",
+        money(month_data.income),
+    ])
+    writer.writerow([
+        month, "Cilj", "Mjesečni cilj štednje",
+        money(month_data.goal),
+    ])
+
+    for expense in expenses:
+        writer.writerow([
+            month,
+            "Trošak",
+            _csv_text(expense.get_category_display()),
+            money(expense.amount),
+        ])
+
+    writer.writerow([
+        month, "Sažetak", "Ukupni troškovi",
+        money(total_expenses),
+    ])
+    writer.writerow([
+        month, "Sažetak", "Preostala sredstva",
+        money(remaining),
+    ])
+    writer.writerow([
+        month,
+        "Status",
+        "Cilj ostvaren" if goal_reached else "Cilj nije ostvaren",
+        "",
+    ])
+
+    return response
